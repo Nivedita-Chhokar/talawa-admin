@@ -196,6 +196,12 @@ export default function postCard(props: InterfacePostCard): JSX.Element {
   // Create a new comment
   const createComment = async (): Promise<void> => {
     try {
+      // Ensure the input is not empty
+      if (!commentInput.trim()) {
+        toast.error(t('emptyCommentError'));
+        return;
+      }
+
       const { data: createEventData } = await create({
         variables: {
           postId: props.id,
@@ -225,7 +231,19 @@ export default function postCard(props: InterfacePostCard): JSX.Element {
         setComments([...comments, newComment]);
       }
     } catch (error: unknown) {
-      errorHandler(t, error);
+      // Handle errors
+      if (error instanceof Error) {
+        if (
+          error.message.includes('Comment validation failed') &&
+          error.message.includes('Path text is required')
+        ) {
+          toast.error('Please enter a comment before submitting.');
+        } else {
+          toast.error('An unexpected error occurred. Please try again.');
+        }
+      } else {
+        errorHandler(t, error); // Handle unexpected errors
+      }
     }
   };
 

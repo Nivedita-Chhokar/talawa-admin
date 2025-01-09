@@ -1053,7 +1053,8 @@
     "comments": "Comentarios",
     "viewPost": "Ver publicación",
     "editPost": "Editar publicación",
-    "postedOn": "Publicado el {{date}}"
+    "postedOn": "Publicado el {{date}}",
+    "emptyCommentError": "Por favor ingrese un comentario antes de enviarlo."
   },
   "home": {
     "posts": "Publicaciones",

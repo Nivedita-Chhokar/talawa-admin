@@ -1,6 +1,6 @@
 import React, { act } from 'react';
 import { MockedProvider } from '@apollo/react-testing';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { I18nextProvider } from 'react-i18next';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
@@ -659,6 +659,62 @@ describe('Testing PostCard Component [User Portal]', () => {
     userEvent.click(screen.getByTestId('createCommentBtn'));
 
     await wait();
+  });
+
+  test('Comment validation displays an error toast when an empty comment is submitted', async () => {
+    console.log('Starting empty comment validation test');
+
+    const cardProps = {
+      id: '1',
+      userImage: 'image.png',
+      creator: {
+        firstName: 'test',
+        lastName: 'user',
+        email: 'test@user.com',
+        id: '1',
+      },
+      postedAt: '',
+      image: 'testImage',
+      video: '',
+      text: 'This is post test text',
+      title: 'This is post test title',
+      likeCount: 1,
+      commentCount: 0,
+      comments: [],
+      likedBy: [
+        {
+          firstName: 'test',
+          lastName: 'user',
+          id: '1',
+        },
+      ],
+      fetchPosts: vi.fn(),
+    };
+
+    expect(toast.error).toBeDefined();
+
+    render(
+      <MockedProvider addTypename={false} link={link}>
+        <BrowserRouter>
+          <Provider store={store}>
+            <I18nextProvider i18n={i18nForTest}>
+              <PostCard {...cardProps} />
+            </I18nextProvider>
+          </Provider>
+        </BrowserRouter>
+      </MockedProvider>,
+    );
+
+    userEvent.click(screen.getByTestId('viewPostBtn')); // Open the post view
+    userEvent.type(screen.getByTestId('commentInput'), ''); // Type an empty comment
+    userEvent.click(screen.getByTestId('createCommentBtn'));
+
+    await waitFor(() => {
+      expect(toast.error).toHaveBeenCalledWith(
+        i18nForTest.t('postCard.emptyCommentError'),
+      );
+    });
+    expect(toast.error).toHaveBeenCalledTimes(1);
   });
 
   test(`Comment should be liked when like button is clicked`, async () => {

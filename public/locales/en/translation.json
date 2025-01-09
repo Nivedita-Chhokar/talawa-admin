@@ -1092,7 +1092,8 @@
     "comments": "Comments",
     "viewPost": "View Post",
     "editPost": "Edit Post",
-    "postedOn": "Posted on {{date}}"
+    "postedOn": "Posted on {{date}}",
+    "emptyCommentError": "Please enter a comment before submitting."
   },
   "home": {
     "posts": "Posts",
