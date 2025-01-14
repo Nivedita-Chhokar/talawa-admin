@@ -662,8 +662,6 @@ describe('Testing PostCard Component [User Portal]', () => {
   });
 
   test('Comment validation displays an error toast when an empty comment is submitted', async () => {
-    console.log('Starting empty comment validation test');
-
     const cardProps = {
       id: '1',
       userImage: 'image.png',
@@ -691,7 +689,7 @@ describe('Testing PostCard Component [User Portal]', () => {
       fetchPosts: vi.fn(),
     };
 
-    expect(toast.error).toBeDefined();
+    // expect(toast.error).toBeDefined();
 
     render(
       <MockedProvider addTypename={false} link={link}>
@@ -759,7 +757,13 @@ describe('Testing PostCard Component [User Portal]', () => {
 
     render(
       <MockedProvider link={errorLink}>
-        <PostCard {...cardProps} />
+        <BrowserRouter>
+          <Provider store={store}>
+            <I18nextProvider i18n={i18nForTest}>
+              <PostCard {...cardProps} />
+            </I18nextProvider>
+          </Provider>
+        </BrowserRouter>
       </MockedProvider>,
     );
 
